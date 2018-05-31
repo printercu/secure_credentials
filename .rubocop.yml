@@ -9,6 +9,8 @@
 AllCops:
   TargetRubyVersion: 2.2
 
+Layout/AlignParameters: {EnforcedStyle: with_fixed_indentation}
+
 # Allows copy-pasting to repl.
 Layout/DotPosition: {EnforcedStyle: trailing}
 
@@ -17,7 +19,19 @@ Layout/SpaceInsideHashLiteralBraces: {EnforcedStyle: no_space}
 # # Keep everything consistent.
 Layout/SpaceBeforeBlockBraces: {EnforcedStyleForEmptyBraces: space}
 
+# Offences named scopes and `expect {}.to change {}`.
+Lint/AmbiguousBlockAssociation: {Enabled: false}
+
+# It's removed from next rubocop version.
+Lint/SplatKeywordArguments: {Enabled: false}
+
+# Other metrics are just enough.
+# This one offences all specs, routes and some initializers.
+Metrics/BlockLength: {Enabled: false}
 Metrics/LineLength: {Max: 100}
+Metrics/MethodLength: {Max: 30}
+
+Style/Alias: {EnforcedStyle: prefer_alias_method}
 
 Style/FrozenStringLiteralComment: {EnforcedStyle: never}
 

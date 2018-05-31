@@ -1,0 +1,30 @@
+# This config aims:
+#
+#   - compact, readable and reusable source,
+#   - consistent constructions (same things stay the same in different context),
+#   - consistent indentation,
+#   - avoiding unnecessary lines in diffs
+#   - wise usage of Ruby features and expressiveness.
+
+AllCops:
+  TargetRubyVersion: 2.2
+
+# Allows copy-pasting to repl.
+Layout/DotPosition: {EnforcedStyle: trailing}
+
+Layout/SpaceInsideHashLiteralBraces: {EnforcedStyle: no_space}
+
+# # Keep everything consistent.
+Layout/SpaceBeforeBlockBraces: {EnforcedStyleForEmptyBraces: space}
+
+Metrics/LineLength: {Max: 100}
+
+Style/FrozenStringLiteralComment: {EnforcedStyle: never}
+
+Style/Lambda: {EnforcedStyle: literal}
+
+Style/RescueStandardError: {EnforcedStyle: implicit}
+Style/SignalException: {EnforcedStyle: only_raise}
+
+Style/TrailingCommaInArrayLiteral: {EnforcedStyleForMultiline: consistent_comma}
+Style/TrailingCommaInHashLiteral: {EnforcedStyleForMultiline: consistent_comma}

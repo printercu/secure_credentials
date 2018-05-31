@@ -1,0 +1,7 @@
+#!/usr/bin/env ruby
+
+require 'bundler/setup'
+require 'secure_credentials'
+
+require 'pry'
+Pry.start

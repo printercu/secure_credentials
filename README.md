@@ -4,26 +4,21 @@
 [![Code Climate](https://codeclimate.com/github/printercu/secure_credentials/badges/gpa.svg)](https://codeclimate.com/github/printercu/secure_credentials)
 [![Build Status](https://travis-ci.org/printercu/secure_credentials.svg)](https://travis-ci.org/printercu/secure_credentials)
 
-Makes it possible to use best of encrypted credentials
-and environment-dependent secrets. Sharing encryption keys with
-every developer in a team is a security issue, and purpose of this gem
-is to help you to avoid it.
-
 ## Rationale
 
 Rails 5.2 brings good idea of storing encrypted credentials in the repo:
-credentials are securely tracked in version control, less chances to face an issue
+credentials are securely tracked in version control, less chance to face an issue
 during deployment, etc. However there are several drawbacks in current implementation:
 
 - It's hard to manage environment-specific credentials.
-  For example, use some different browser api keys in development and production,
+  For example, to use different browser api keys in development and production,
   one is whitelisted for `locahost` and other one for app's domain.
 - In most cases it's required to share `master.key` with every developer.
   This is not acceptable for a lot of teams, and framework must serve their needs too.
 
 There are a couple ways to workaround this issues, but all of them brings
-unnecessary complexity. This gem takes best from new encrypted `credentials.yml.enc`
-and multi-environmental `secrets.yml`. It allows to use combination
+unnecessary complexity. This gem takes best from new encrypted credentials (`credentials.yml.enc`)
+and multi-environmental secrets (`secrets.yml`). It allows to use combination
 of encrypted and plain files for same configuration in different environments.
 For example, having encrypted `credentials.production.yml.enc` for production
 and multi-environmental `credentials.yml` for all other environments.
@@ -45,7 +40,7 @@ And then execute:
 By default this gem patches Rails::Application to make `#credentials`, `#secrets` and `#encrypted`
 use Rails-compatible wrapper around SecureCredentials::Store.
 
-SecureCredentials::Store provides read-write interface for YAML configuration files. It supports:
+SecureCredentials::Store provides read-write access to YAML configuration files. It supports:
 
   - both encrypted and plain files,
   - both file-per-environment and multi-environment files.
@@ -65,26 +60,28 @@ Otherwise `env` is used to fetch appropriate section.
 Key for decoding encoded files can be passed:
 
   - in `key` argument;
-  - envvar identified by `env_key`, default is to upcased basename appended with `_KEY`
+  - in envvar identified by `env_key`, default is to upcased basename appended with `_KEY`
     (ex., `SECRETS_KEY`);
   - in file found at `key_path`,
     by default it uses filename and replaces `.yml.enc` with `.key`
     (`secrets.production.key` for `secrets.production.yml.enc`);
   - `SecureCredentials.master_key` which is read from `config/master.key` in Rails apps.
 
-Use `rails encrypted path/to/file.yml.enc -k path/to/key.key` to edit encrypted files.
+To edit encrypted files use `rails encrypted path/to/file.yml.enc -k path/to/key.key`.
 Missing `.key` and `.yml` files are automatically created when you edit them for the first time.
 
 ## Best practices
 
-- __Don't keep master.key in local repo!__
+- __Don't keep master.key in local working directory!__
 
-  It's the as PIN-code written on backside of credit card.
+  It's like a PIN-code written on backside of credit card.
   Keep it in secure place and use it when you need to modify credentials.
 
-- Don't share production credentials with those who must not access them.
+- Don't share production credentials with those team members who don't need to access them.
 
   Secrets get less secret every time they are shared.
+  It's better to share some particular keys to selected developers,
+  instead of giving everybody access to all keys.
 
 ## Development
 

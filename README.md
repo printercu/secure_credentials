@@ -19,7 +19,38 @@ And then execute:
 
 ## Usage
 
-TODO: Write usage instructions here
+By default this gem patches Rails::Application to make `#credentials`, `#secrets` and `#encrypted`
+use Rails-compatible wrapper around SecureCredentials::Store.
+
+SecureCredentials::Store provides read-write interface for YAML configuration files. It supports:
+
+  - both encrypted and plain files,
+  - both file-per-environment and multi-environment files.
+
+It takes base path of configuration file (for example, `config/secrets`)
+and environment value. Then it tries to find the most appropriate file
+for this configuration in following order:
+
+    "#{base}.#{env}.yml.enc"
+    "#{base}.#{env}.yml"
+    "#{base}.yml.enc"
+    "#{base}.yml"
+
+If environment specific file is present, it's whole content is returned.
+Otherwise `env` is used to fetch appropriate section.
+
+Key for decoding encoded files can be passed:
+
+  - in `key` argument;
+  - envvar identified by `env_key`, default is to upcased basename appended with `_KEY`
+    (ex., `SECRETS_KEY`);
+  - in file found at `key_path`,
+    by default it uses filename and replaces `.yml.enc` with `.key`
+    (`secrets.production.key` for `secrets.production.yml.enc`);
+  - `SecureCredentials.master_key` which is read from `config/master.key` in Rails apps.
+
+Use `rails encrypted path/to/file.yml.enc -k path/to/key.key` to edit encrypted files.
+Missing `.key` and `.yml` files are automatically created when you edit them for the first time.
 
 ## Development
 

@@ -1,5 +1,16 @@
 sudo: false
 language: ruby
+cache: bundler
 rvm:
-  - 2.4.1
-before_install: gem install bundler -v 1.16.1
+  - 2.5
+  - 2.4
+
+notifications:
+  email: false
+
+# for 2.5.0 until 2.5.1 is released:
+#   https://github.com/travis-ci/travis-ci/issues/8978
+#   https://github.com/travis-ci/travis-ci/issues/8969#issuecomment-354135622
+before_install:
+  - gem update --system
+  - gem install bundler

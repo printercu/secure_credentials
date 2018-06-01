@@ -1,5 +1,9 @@
 # SecureCredentials
 
+[![Gem Version](https://badge.fury.io/rb/secure_credentials.svg)](http://badge.fury.io/rb/secure_credentials)
+[![Code Climate](https://codeclimate.com/github/printercu/secure_credentials/badges/gpa.svg)](https://codeclimate.com/github/printercu/secure_credentials)
+[![Build Status](https://travis-ci.org/printercu/secure_credentials.svg)](https://travis-ci.org/printercu/secure_credentials)
+
 Makes it possible to use best of encrypted credentials
 and environment-dependent secrets. Sharing encryption keys with
 every developer in a team is a security issue, and purpose of this gem

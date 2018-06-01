@@ -9,6 +9,25 @@ and environment-dependent secrets. Sharing encryption keys with
 every developer in a team is a security issue, and purpose of this gem
 is to help you to avoid it.
 
+## Rationale
+
+Rails 5.2 brings good idea of storing encrypted credentials in the repo:
+credentials are securely tracked in version control, less chances to face an issue
+during deployment, etc. However there are several drawbacks in current implementation:
+
+- It's hard to manage environment-specific credentials.
+  For example, use some different browser api keys in development and production,
+  one is whitelisted for `locahost` and other one for app's domain.
+- In most cases it's required to share `master.key` with every developer.
+  This is not acceptable for a lot of teams, and framework must serve their needs too.
+
+There are a couple ways to workaround this issues, but all of them brings
+unnecessary complexity. This gem takes best from new encrypted `credentials.yml.enc`
+and multi-environmental `secrets.yml`. It allows to use combination
+of encrypted and plain files for same configuration in different environments.
+For example, having encrypted `credentials.production.yml.enc` for production
+and multi-environmental `credentials.yml` for all other environments.
+
 ## Installation
 
 Add this line to your application's Gemfile:
@@ -55,6 +74,17 @@ Key for decoding encoded files can be passed:
 
 Use `rails encrypted path/to/file.yml.enc -k path/to/key.key` to edit encrypted files.
 Missing `.key` and `.yml` files are automatically created when you edit them for the first time.
+
+## Best practices
+
+- __Don't keep master.key in local repo!__
+
+  It's the as PIN-code written on backside of credit card.
+  Keep it in secure place and use it when you need to modify credentials.
+
+- Don't share production credentials with those who must not access them.
+
+  Secrets get less secret every time they are shared.
 
 ## Development
 

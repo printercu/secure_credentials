@@ -23,6 +23,10 @@ of encrypted and plain files for same configuration in different environments.
 For example, having encrypted `credentials.production.yml.enc` for production
 and multi-environmental `credentials.yml` for all other environments.
 
+There are some other issues caused by storing `master.key` in local repo.
+See this wiki page for details:<br>
+[Rails 5.2 credentials are not secure](https://github.com/printercu/secure_credentials/wiki/Rails-5.2-credentials-are-not-secure).
+
 ## Installation
 
 Add this line to your application's Gemfile:

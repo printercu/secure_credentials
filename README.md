@@ -71,7 +71,7 @@ Key for decoding encoded files can be passed:
     (`secrets.production.key` for `secrets.production.yml.enc`);
   - `SecureCredentials.master_key` which is read from `config/master.key` in Rails apps.
 
-To edit encrypted files use `rails encrypted path/to/file.yml.enc -k path/to/key.key`.
+To edit encrypted files use `rails encrypted:edit path/to/file.yml.enc -k path/to/key.key`.
 Missing `.key` and `.yml` files are automatically created when you edit them for the first time.
 
 ## Best practices

@@ -1,5 +1,9 @@
 require 'securerandom'
-require 'active_support/encrypted_file'
+begin
+  require 'active_support/encrypted_file'
+rescue LoadError
+  require 'secure_credentials/active_support/encrypted_file'
+end
 
 module SecureCredentials
   # Wraps ActiveSupport::EncryptedFile and provides passing key as an argument.

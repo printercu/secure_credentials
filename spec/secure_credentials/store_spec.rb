@@ -1,8 +1,8 @@
 RSpec.describe SecureCredentials::Store, :with_tmpdir do
-  let(:instance) { described_class.new(path, inline_key, **instance_options) }
+  let(:instance) { described_class.new(path, **instance_options) }
   let(:path) { tmpdir.join('secrets') }
   let(:inline_key) {}
-  let(:instance_options) { {env: env} }
+  let(:instance_options) { {key: inline_key, env: env} }
   let(:env) { :dev }
   let(:cipher) { SecureCredentials::EncryptedFile::CIPHER }
 
@@ -158,6 +158,27 @@ RSpec.describe SecureCredentials::Store, :with_tmpdir do
     context 'when file does not exist' do
       let(:existing_file) { tmpdir.join('invalid.yml') }
       it { should eq({}) }
+    end
+  end
+
+  context '.detect_key_path_for' do
+    subject { described_class.detect_key_path_for(file) }
+    let(:file) { tmpdir.join('test.yml.enc') }
+    it { should eq tmpdir.join('test.key') }
+
+    context 'for rails app' do
+      before { stub_const('Rails', double(root: tmpdir.join('rails'))) }
+      it { should eq Rails.root.join('config/master.key') }
+
+      context 'when key file exist' do
+        before { tmpdir.join('test.key').write('') }
+        it { should eq tmpdir.join('test.key') }
+      end
+    end
+
+    context 'for not encrypted file' do
+      let(:file) { tmpdir.join('test.yml') }
+      it { should eq nil }
     end
   end
 end

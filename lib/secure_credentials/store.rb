@@ -33,10 +33,13 @@ module SecureCredentials
       # Finds the most appropriate existing file for given path and env.
       # Returns `[environmental?, encrypted?, filename]`.
       def detect_filename(path, env)
-        stub_ext_path = Pathname.new("#{path}.stub")
-        if path.basename.to_s.include?('.yml')
+        # Backward compatibility with original Rails implementation:
+        # if filename is given with extension then we don't try to detect
+        # environmental and/or encrypted variant.
+        if path.basename.to_s =~ /\.yml(\.enc)?\z/i
           [false, path.basename.to_s.end_with?('.enc'), path]
         else
+          stub_ext_path = Pathname.new("#{path}.stub")
           [
             [true,  true,   stub_ext_path.sub_ext(".#{env}.yml.enc")],
             [true,  false,  stub_ext_path.sub_ext(".#{env}.yml")],
@@ -44,6 +47,14 @@ module SecureCredentials
             [false, false,  stub_ext_path.sub_ext('.yml')],
           ].find { |x| x[2].exist? }
         end
+      end
+
+      # Looks for key file for given path replacing `.yml.enc` with `.key`.
+      # It falls back to `config/master.key` in Rails app if file does not exist.
+      def detect_key_path_for(path)
+        return unless path.to_s.end_with?('.yml.enc')
+        key_path = path.sub_ext('').sub_ext('.key')
+        key_path.exist? || !defined?(::Rails) ? key_path : ::Rails.root.join('config/master.key')
       end
 
       def env_key_for(path)
@@ -60,12 +71,12 @@ module SecureCredentials
     alias_method :environmental?, :environmental
     alias_method :encrypted?, :encrypted
 
-    def initialize(path, key = nil, env: nil, key_path: nil, env_key: nil)
+    def initialize(path, env: nil, key: nil, key_path: nil, env_key: nil)
       @path = path = Pathname.new(path)
       @env = env
       @environmental, @encrypted, @filename = self.class.detect_filename(path, env)
       @key = key
-      @key_path = key_path || filename && filename.sub_ext('').sub_ext('.key')
+      @key_path = key_path || self.class.detect_key_path_for(filename)
       @env_key = env_key || self.class.env_key_for(path)
     end
 
@@ -107,7 +118,13 @@ module SecureCredentials
     end
 
     def encrypted_file
-      EncryptedFile.new(filename, key, key_path: key_path, env_key: env_key)
+      EncryptedFile.new(
+        content_path: filename,
+        key: key,
+        key_path: key_path,
+        env_key: env_key,
+        raise_if_missing_key: true
+      )
     end
   end
 end

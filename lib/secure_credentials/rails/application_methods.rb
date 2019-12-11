@@ -15,6 +15,8 @@ module SecureCredentials
       end
 
       def read_secure_credentials(path, key_path: nil, **options)
+        # Unlike Rails we don't provide default value for key_path
+        # to be able to generate it based on path.
         key_path &&= ::Rails.root.join(key_path)
         store = Store.new(::Rails.root.join(path), key_path: key_path, env: ::Rails.env, **options)
         Credentials.new(store)

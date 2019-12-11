@@ -1,3 +1,8 @@
+# Unreleased
+
+# 0.2.3
+- Fix using explicit `key_path` when different `master.key` exists.
+
 # 0.2.2
 - Backport encrypted:edit for Rails 5.1.
 
